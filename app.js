@@ -8,10 +8,8 @@ app.use(express.json());
 app.use(cors());
 
 db.serialize(() => {
-	db.run('DROP TABLE IF EXISTS lorem')
-	db.run('DROP TABLE IF EXISTS users')
-	db.run('CREATE TABLE users (username TEXT)')
-  db.run('CREATE TABLE lorem (info TEXT)')
+	db.run('DROP TABLE IF EXISTS songs')
+	db.run('CREATE TABLE songs (title TEXT,artist TEXT, genre TEXT, year_released INTEGER)')
   const stmt = db.prepare('INSERT INTO lorem VALUES (?)')
 
   for (let i = 0; i < 10; i++) {
