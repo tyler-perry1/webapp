@@ -13,15 +13,15 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// Get all songs 
+ 
 app.get('/songs', (req, res) => {
-  const sql = 'SELECT * FROM songs'; // Simple query
+  const sql = 'SELECT * FROM songs'; 
 
   db.all(sql, [], (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
-      res.json(rows); // Send all the songs
+      res.json(rows); 
     }
   });
 });
