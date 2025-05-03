@@ -1,66 +1,44 @@
-const express = require('express')
-const sqlite3= require('sqlite3').verbose()
-const cors = require('cors')
-const app = express()
-const db= new sqlite3.Database('db/sample.db')
-const port = 8080
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
+const app = express();
+const db = new sqlite3.Database('db/music.db'); 
+const port = 8080;
+
 app.use(express.json());
 app.use(cors());
 
-db.serialize(() => {
-	db.run('DROP TABLE IF EXISTS songs')
-	db.run('CREATE TABLE songs (title TEXT,artist TEXT, genre TEXT, year_released INTEGER)')
-  const stmt = db.prepare('INSERT INTO lorem VALUES (?)')
-
-  for (let i = 0; i < 10; i++) {
-    stmt.run(`Ipsum ${i}`)
-  }
-
-  stmt.finalize()
-
-  db.each('SELECT rowid AS id, info FROM lorem', (err, row) => {
-    console.log(`${row.id}: ${row.info}`)
-  })
-})
-
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-// API to get all students
-app.get('/lorem', (req, res) => {
-const sql = 'SELECT * FROM lorem';
-
-db.all(sql, [], (err, rows) => {
-if (err) {
-res.status(500).json({ error: err.message });
-} else {
-res.json(rows);
-}
-});
+  res.send('Hello World!');
 });
 
-app.post("/post", (req, res) => {
-	console.log(req.body)
-	const username = req.body.username;
-	db.run('INSERT INTO users (username) VALUES (?)', username, (err) => {
-		if(err)
-			reject(err);
-	});
-	res.send ({"message": "success"});
+// Get all songs 
+app.get('/songs', (req, res) => {
+  const sql = 'SELECT * FROM songs'; // Simple query
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.json(rows); // Send all the songs
+    }
+  });
 });
-// Close the database connection when the server stops
+
+
 process.on('SIGINT', () => {
-db.close((err) => {
-if (err) {
-console.error('Error closing the database:', err.message);
-}
-console.log('Database connection closed.');
-process.exit(0);
+  db.close((err) => {
+    if (err) {
+      console.error('Error closing the database:', err.message);
+    }
+    console.log('Database  closed.');
+    process.exit(0);
+  });
 });
-});
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Server is listening on port ${port}`);
+});
 
 
